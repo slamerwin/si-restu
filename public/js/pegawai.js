@@ -23,6 +23,9 @@ var table = $('#dataTablePegawai').DataTable({
         "data": "nohp"
         },
         {
+          "data": "statusAktif"
+        },
+        {
             "data": "id",
             "render": function (data, type, full, meta) {
                 var actions = []; 
@@ -62,12 +65,14 @@ var table = $('#dataTablePegawai').DataTable({
             url: window.location.origin+'/pegawai/edit',
             data: {id:id},
             success: function (data) {
-              console.log(data[0]['id']);
+              console.log(data);
               $("input[name='id']").val(data[0]['id']);
               $("input[name='username1']").val(data[0]['username']);
               $("input[name='email1']").val(data[0]['email']);
               $("input[name='nip1']").val(data[0]['nip']);
               $("input[name='nohp1']").val(data[0]['nohp']);
+              // $("input[name='statusAktif']").val(data[0]['statusAktif']);
+              $('#statusAktif').val(data[0]['statusAktif']);
             }
           });
       }

@@ -14,13 +14,13 @@ class DataTable{
 
     public function getDataRole($star,$lengt,$search){
         $builder = $this->db->table('user');
-        $builder->select('id,email,username,level,nip, (@rownum:=@rownum + 1) AS rownum ');
+        $builder->select('id,email,username,level,nip,statusAktif, (@rownum:=@rownum + 1) AS rownum ');
         if ($search != "" || $search != null){
             $builder->where("( email LIKE '%".$search."%' OR username LIKE '%".$search."%' OR  level LIKE '%".$search."%' OR nip LIKE '%".$search."%' ) ");
         }
         $builder->where("statusAktif = 'Aktif'");
         $builder->where('deleted_at is null');
-        $builder->from( '(SELECT @rownum := 0) as r');
+        $builder->from( '(SELECT @rownum := '.$star.') as r');
         $query = $builder->get($lengt,$star);
         return $query->getResult();
 
@@ -42,14 +42,14 @@ class DataTable{
 
     public function getData($star,$lengt,$search,$status){
         $builder = $this->db->table('user');
-        $builder->select('id,email,username,nip,nohp, (@rownum:=@rownum + 1) AS rownum ');
+        $builder->select('id,email,username,nip,nohp,statusAktif, (@rownum:=@rownum + 1) AS rownum ');
         if ($search != "" || $search != null){
             $builder->where("( email LIKE '%".$search."%' OR username LIKE '%".$search."%' OR  level LIKE '%".$search."%' OR nip LIKE '%".$search."%' ) ");
         }
         $builder->where("statuspegawai = '".$status."'");
-        $builder->where("statusAktif = 'Aktif'");
+        // $builder->where("statusAktif = 'Aktif'");
         $builder->where('deleted_at is null');
-        $builder->from( '(SELECT @rownum := 0) as r');
+        $builder->from( '(SELECT @rownum := '.$star.') as r');
         $query = $builder->get($lengt,$star);
         return $query->getResult();
 
@@ -62,7 +62,7 @@ class DataTable{
         }
         $builder->selectCount('id');
         $builder->where("statuspegawai = '".$status."'");
-        $builder->where("statusAktif = 'Aktif'");
+        // $builder->where("statusAktif = 'Aktif'");
         $builder->where('deleted_at is null');
         $query = $builder-> get();
         return $query->getResult();

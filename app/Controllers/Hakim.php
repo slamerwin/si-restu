@@ -107,7 +107,7 @@ class Hakim extends BaseController
 			$id = $this->request->getPost('id');
 			if(isset($id)){
 				$user = $this->user_m->where('user.id',$id)
-									   ->where('user.statusAktif','Aktif')
+									//    ->where('user.statusAktif','Aktif')
 									   ->where('user.deleted_at is null')
 									   ->findAll();
 				return $this->setResponseFormat('json')->respond($user);
@@ -128,6 +128,7 @@ class Hakim extends BaseController
             $email=$this->request->getPost('email1');
             $nohp=$this->request->getPost('nohp1');
 			$id=$this->request->getPost('id');
+            $statusAktif=$this->request->getPost('statusAktif');
         
             
             if(isset($email)){
@@ -137,6 +138,7 @@ class Hakim extends BaseController
                     'email' => $email,
                     'nip' => $nip,
 					'nohp' => $nohp,
+                    'statusAktif' => $statusAktif,
                     'updated_at' => Time::now()
                 ];
                 

@@ -78,7 +78,7 @@ class Auth extends BaseController{
 		}else{
             $email=$this->request->getGet('email');
             $user = $this->user_m->where('email',$email)
-                                ->where('user.statusAktif','Aktif')
+                                // ->where('user.statusAktif','Aktif')
                                 ->where('user.deleted_at is null')
                                 ->findAll();
             if (count($user) > 0){

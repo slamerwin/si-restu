@@ -23,6 +23,9 @@ var table = $('#dataTableHonor').DataTable({
         "data": "nohp"
         },
         {
+          "data": "statusAktif"
+        },
+        {
             "data": "id",
             "render": function (data, type, full, meta) {
                 var actions = []; 
@@ -68,6 +71,8 @@ var table = $('#dataTableHonor').DataTable({
               $("input[name='email1']").val(data[0]['email']);
               $("input[name='nip1']").val(data[0]['nip']);
               $("input[name='nohp1']").val(data[0]['nohp']);
+              // $("input[name='statusAktif']").val(data[0]['statusAktif']);
+              $('#statusAktif').val(data[0]['statusAktif']);
             }
           });
       }
