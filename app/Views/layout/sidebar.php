@@ -35,15 +35,15 @@
                     </div>
                 </div>
             </li>
-
-            <!-- Role User -->
-            <li class="nav-item">
-                <a class="nav-link" href="<?= base_url('role') ?>">
-                    <i class="fas fa-users-cog"></i>
-                    <span>Role User</span>
-                </a>
-            </li>
-
+            <?php if(session()->get( 'level' ) == 1) {?>
+                <!-- Role User -->
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= base_url('role') ?>">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Role User</span>
+                    </a>
+                </li>
+            <?php } ?>
             <!-- Divider -->
             <hr class="sidebar-divider">
 
