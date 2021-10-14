@@ -1,3 +1,5 @@
+
+
 var table = $('#dataTablePegawai').DataTable({
     "Dom": 'RlfrtlipB',
     "ordering":false,
@@ -59,6 +61,59 @@ var table = $('#dataTablePegawai').DataTable({
         },
     });
 
+    var table1 = $('#dataTablePegawai1').DataTable({
+      "Dom": 'RlfrtlipB',
+      "ordering":false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+          "url": window.location.origin+'/pegawai/dataPegawai',
+      },
+      "columns": [
+          {
+          "data": "rownum"
+          },
+          {
+          "data": "username"
+          },
+          {
+          "data": "nip"
+          },
+          {
+          "data": "email"
+          },
+          {
+          "data": "nohp"
+          },
+          {
+            "data": "statusAktif"
+          },
+         
+      ],
+      
+          language: {
+              "decimal": "",
+              "emptyTable": "Tidak ada data yang ditemukan",
+              "info": "Menampilkan _START_ sd _END_ dari _TOTAL_ Entri",
+              "infoEmpty": "Menampilkan 0 sd 0 dari 0 Entri",
+              "infoFiltered": "(filtered from _MAX_ total entries)",
+              "infoPostFix": "",
+              "thousands": ",",
+              "lengthMenu": "Tampilkan _MENU_",
+              "loadingRecords": "Mengambil data...",
+              "processing": "Memproses...",
+              "search": "Cari:",
+              "zeroRecords": "Tidak ada data yang ditemukan",
+              "paginate": {
+                  "first": "Pertama",
+                  "last": "Terakhir",
+                  "next": ">",
+                  "previous": "<"
+              },
+          },
+      });
+  
+
     function up(id) {
         $.ajax({
             type: 'POST',
@@ -106,6 +161,7 @@ var table = $('#dataTablePegawai').DataTable({
                       padding: '2em'
                   });
                   table.ajax.reload();
+                  table1.ajax.reload();
                   
                 }, error: function(response){
                     console.log(response.responseText);

@@ -11,9 +11,16 @@
     </div>
     <div class="card-body">
     <div class="table-responsive">
-    <button type="button" class="btn btn-sm btn-primary" id="btnTambah" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i> Data Pegawai </button>
-    <br><br>
+    <?php if(session()->get( 'level' ) == 1 || session()->get( 'level' ) == 2) {?>
+        <button type="button" class="btn btn-sm btn-primary" id="btnTambah" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i> Data Pegawai </button>
+        <br><br>
+    <?php } ?>
+
+    <?php if(session()->get( 'level' ) == 1 || session()->get( 'level' ) == 2) {?>
         <table class="table table-bordered" id="dataTablePegawai" width="100%" cellspacing="0">
+    <?php } else { ?>
+        <table class="table table-bordered" id="dataTablePegawai1" width="100%" cellspacing="0">
+    <?php }  ?>
             <thead>
                 <tr>
                     <th>No</th>
@@ -22,7 +29,9 @@
                     <th>Email</th>
                     <th>No HP</th>
                     <th>Status Aktif</th>
-                    <th>Aksi</th>
+                    <?php if(session()->get( 'level' ) == 1 || session()->get( 'level' ) == 2) {?>
+                        <th>Aksi</th>
+                    <?php } ?>
                 </tr>
             </thead>
             <tbody>              
