@@ -232,7 +232,68 @@ $('#log').validate({
   });
 
 
- 
+
+  $('#ubahDataPermintaan').validate({
+    rules: {
+      tentang1: {
+        required: true,
+      },
+      'petugas1[]': {
+          required: true,
+          minlength: 2
+      },
+
+    },
+     // Specify validation Error messages
+     messages: {
+      'petugas1[]': {
+        minlength:"Select you petugas, Minimum two petugas"
+      },
+     },
+    
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
+
+  $('#tambahDataPermintaan').validate({
+    rules: {
+      tentang: {
+        required: true,
+      },
+      'petugas[]': {
+          required: true,
+          minlength: 2
+      },
+
+    },
+     // Specify validation Error messages
+     messages: {
+      'petugas[]': {
+        minlength:"Select you petugas, Minimum two petugas"
+      },
+     },
+    
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
 //   $('#statusPegawai').change(function() {
 //     // if($('#myselect option:selected').val() == 0) {
 //     // }

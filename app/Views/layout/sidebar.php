@@ -65,6 +65,9 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Surat Keputusan</h6>
+                        <?php if(session()->get( 'level' ) == 1 || session()->get( 'level' ) == 2 || session()->get( 'level' ) == 3) {?>
+                            <a class="collapse-item" href="<?= base_url('permintaan') ?>">Permohonan Pembuatan</a>
+                        <?php } ?>
                         <a class="collapse-item" href="#">Aktif</a>
                         <a class="collapse-item" href="#">Tidak Aktif</a>
                     </div>

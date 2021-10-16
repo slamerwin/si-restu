@@ -22,6 +22,8 @@
     <!-- Custom styles for this page -->
     <link href="<?= base_url(); ?>/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="<?= base_url(); ?>/vendor/bootstrap4-editable/css/bootstrap-editable.css" rel="stylesheet">
+    <!-- Latest compiled and minified CSS -->
+    <link href="<?= base_url(); ?>/vendor/bootstrapmd-select/css/bootstrap-select.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
   	
     
@@ -122,6 +124,8 @@
     <script src="<?= base_url(); ?>/vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="<?= base_url(); ?>/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="<?= base_url(); ?>/vendor/bootstrap4-editable/js/bootstrap-editable.js"></script>
+    <script src="<?= base_url(); ?>/vendor/bootstrapmd-select/js/bootstrap-select.js"></script>
+    
    
     <script>
         if ('<?php echo session()->has('status');?>'){

@@ -68,4 +68,37 @@ class DataTable{
         return $query->getResult();
 
     }
+
+    public function getDataPermintaan($star,$lengt,$search){
+        $builder = $this->db->table('suratkeputusan');
+        $builder->select('id,tentang, (@rownum:=@rownum + 1) AS rownum ');
+        if ($search != "" || $search != null){
+            $builder->where("( tentang LIKE '%".$search."%' ) ");
+        }
+        $builder->where("status = 'Permohonan'");
+        $builder->where('deleted_at is null');
+        $builder->from( '(SELECT @rownum := '.$star.') as r');
+        $query = $builder->get($lengt,$star);
+        return $query->getResult();
+
+    }
+
+    public function countDataPermintaan($search){
+        $builder = $this->db->table('suratkeputusan');
+        if ($search != "" || $search != null){
+            $builder->where("( tentang LIKE '%".$search."%' ) ");
+        }
+        $builder->selectCount('id');
+        $builder->where("status = 'Permohonan'");
+        $builder->where('deleted_at is null');
+        $query = $builder-> get();
+        return $query->getResult();
+
+    }
+
+    public function deletPetugas($idsk){
+        $builder = $this->db->table('petugas');
+        $builder->delete(['id_sk' => $idsk]);
+
+    }
 }

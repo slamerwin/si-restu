@@ -39,6 +39,7 @@ require 'web/role.php';
 require 'web/pegawai.php';
 require 'web/hakim.php';
 require 'web/honor.php';
+require 'web/permintaansk.php';
 
 
 /*
