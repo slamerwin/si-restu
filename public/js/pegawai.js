@@ -127,7 +127,7 @@ var table = $('#dataTablePegawai').DataTable({
               $("input[name='nip1']").val(data[0]['nip']);
               $("input[name='nohp1']").val(data[0]['nohp']);
               // $("input[name='statusAktif']").val(data[0]['statusAktif']);
-              $('#statusAktif').val(data[0]['statusAktif']);
+              // $('#statusAktif').val(data[0]['statusAktif']);
             }
           });
       }

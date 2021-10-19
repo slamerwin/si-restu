@@ -129,4 +129,65 @@ class DataTable{
         return $query->getResult();
 
     }
+
+
+    public function getDataAktif($star,$lengt,$search){
+        $builder = $this->db->table('suratkeputusan');
+        $builder->select('id,tentang,no, file,alasan, (@rownum:=@rownum + 1) AS rownum ');
+        if ($search != "" || $search != null){
+            $builder->where("( tentang LIKE '%".$search."%' OR no LIKE '%".$search."%'  ) ");
+        }
+        $builder->where("status = 'Aktif'");
+        $builder->where('deleted_at is null');
+        $builder->orderBy('created_at', 'DESC');
+        $builder->from( '(SELECT @rownum := '.$star.') as r');
+
+        $query = $builder->get($lengt,$star);
+        return $query->getResult();
+
+    }
+
+    public function countDataAktif($search){
+        $builder = $this->db->table('suratkeputusan');
+        if ($search != "" || $search != null){
+            $builder->where("( tentang LIKE '%".$search."%' OR no LIKE '%".$search."%'  ) ");
+        }
+        $builder->selectCount('id');
+        $builder->where("status = 'Aktif'");
+        $builder->where('deleted_at is null');
+        $builder->orderBy('created_at', 'DESC');
+        $query = $builder-> get();
+        return $query->getResult();
+
+    }
+
+    public function getDataTidakAktif($star,$lengt,$search){
+        $builder = $this->db->table('suratkeputusan');
+        $builder->select('id,tentang,no, file,alasan, (@rownum:=@rownum + 1) AS rownum ');
+        if ($search != "" || $search != null){
+            $builder->where("( tentang LIKE '%".$search."%' OR no LIKE '%".$search."%'  ) ");
+        }
+        $builder->where("status = 'Tidak Aktif'");
+        $builder->where('deleted_at is null');
+        $builder->orderBy('created_at', 'DESC');
+        $builder->from( '(SELECT @rownum := '.$star.') as r');
+
+        $query = $builder->get($lengt,$star);
+        return $query->getResult();
+
+    }
+
+    public function countDataTidakAktif($search){
+        $builder = $this->db->table('suratkeputusan');
+        if ($search != "" || $search != null){
+            $builder->where("( tentang LIKE '%".$search."%' OR no LIKE '%".$search."%'  ) ");
+        }
+        $builder->selectCount('id');
+        $builder->where("status = 'Tidak Aktif'");
+        $builder->where('deleted_at is null');
+        $builder->orderBy('created_at', 'DESC');
+        $query = $builder-> get();
+        return $query->getResult();
+
+    }
 }

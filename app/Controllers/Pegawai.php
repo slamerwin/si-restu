@@ -5,10 +5,15 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 
 use App\Models\DataTable;
+use App\Models\Notif;
+use App\Models\Permintaan;
+use App\Models\Petugas;
 use App\Models\User;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\I18n\Time;
 use GibberishAES;
+use PHPUnit\Framework\Constraint\IsEmpty;
+
 class Pegawai extends BaseController
 {
 	use ResponseTrait;
@@ -16,7 +21,10 @@ class Pegawai extends BaseController
     {
 		$this->session = session();
 		$this->dt_m  = new DataTable();
-		$this->user_m  = new User();
+        $this->pn_m  = new Permintaan();
+        $this->pt_m  = new Petugas();
+        $this->user_m  = new User();
+        $this->no_m  = new Notif();
 		$this->cerip = new GibberishAES();
     }
 
@@ -50,8 +58,8 @@ class Pegawai extends BaseController
                 $search = $this->request->getGet('search');
                 $searchValue = $search['value'];
                 
-                $getData =  $this->dt_m->getData($start,$length, $searchValue, 'Pegawai');
-                $countGetData = $this->dt_m->countData($searchValue, 'Pegawai');             
+                $getData =  $this->dt_m->getData($start,$length, $searchValue, 'Tetap');
+                $countGetData = $this->dt_m->countData($searchValue, 'Tetap');             
              
     
                 return $this->setResponseFormat('json')->respond([
@@ -103,7 +111,7 @@ class Pegawai extends BaseController
                 $username=$this->request->getPost('username');
                 $nip = $this->request->getPost('nip');
                 $email=$this->request->getPost('email');
-                $statusPegawai = 'Pegawai';
+                $statusPegawai = 'Tetap';
                 $nohp=$this->request->getPost('nohp');
             
                 
@@ -174,7 +182,7 @@ class Pegawai extends BaseController
                 $email=$this->request->getPost('email1');
                 $nohp=$this->request->getPost('nohp1');
                 $id=$this->request->getPost('id');
-                $statusAktif=$this->request->getPost('statusAktif');
+                $statusAktif='Aktif';
             
                 
                 if(isset($email)){
@@ -184,7 +192,7 @@ class Pegawai extends BaseController
                         'email' => $email,
                         'nip' => $nip,
                         'nohp' => $nohp,
-                        'statusAktif' => $statusAktif,
+                        
                         'updated_at' => Time::now()
                     ];
                     
@@ -218,8 +226,25 @@ class Pegawai extends BaseController
                 $data = [
                     'deleted_at' => Time::now()
                 ];
-                
+                $surat = $this->pn_m->where("id IN (SELECT id_sk FROM petugas WHERE id_user = ".$id."  AND deleted_at is null )")
+                                    ->where('deleted_at is null')
+                                    ->findAll();
+                foreach ($surat as $value) {
+                // print_r($value['id']);
+                        $user = $this->user_m->where('id',$id)
+                                    ->where('deleted_at is null')
+                                    ->findAll();
+                        $data1 = [
+                            'status'=>'Tidak Aktif',
+                            'alasan' => "Petugas ".$user[0]['nip']." - ".$user[0]['username']." Telah di Hapus/Tidak Aktif lagi",
+                            'updated_at' => Time::now()
+                        ];
+                        $updateSk = $this->pn_m->update($value['id'],$data1);
+                        $updatePetugas = $this->pt_m->where('id_sk',$value['id'])->set( ['deleted_at' => Time::now()])->update();
+                        $createPermintaan = $this->no_m->insert(['status'=>"Tidak Aktif",'id_sk' => $value['id']]);  
+                }
                 $updateUser = $this->user_m->update($id,$data);
+               
             }else{
                 return redirect()->to(base_url('pegawai'))->with('status', false)->with('message', 'Ilegal Access');
             }

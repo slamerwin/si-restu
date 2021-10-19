@@ -68,8 +68,8 @@
                         <?php if(session()->get( 'level' ) == 1 || session()->get( 'level' ) == 2 || session()->get( 'level' ) == 3) {?>
                             <a class="collapse-item" href="<?= base_url('permintaan') ?>">Permohonan Pembuatan</a>
                         <?php } ?>
-                        <a class="collapse-item" href="#">Aktif</a>
-                        <a class="collapse-item" href="#">Tidak Aktif</a>
+                        <a class="collapse-item" href="<?= base_url('permintaan/aktif') ?>">Aktif</a>
+                        <a class="collapse-item" href="<?= base_url('permintaan/tidakAktif') ?>">Tidak Aktif</a>
                     </div>
                 </div>
             </li>

@@ -36,7 +36,7 @@
                 </a>
                 <?php } ?>
                 <?php  if( session()->get( 'level' )==1|| session()->get( 'level' )==3) {?>
-                <a class="dropdown-item d-flex align-items-center" href="#">
+                <a class="dropdown-item d-flex align-items-center" href="<?= base_url('permintaan/statusNotifTidakAktif')?>">
                     <div class="mr-3">
                         <div class="icon-circle bg-success">
                             <i class="fas fa-file-alt text-white"></i>

@@ -324,7 +324,48 @@ $('#log').validate({
     },
      // Specify validation Error messages
      messages: {
-      'petugas[]': {
+      'petugas2[]': {
+        minlength:"Select you petugas, Minimum one petugas"
+      },
+      file: {
+        extension:"Format File PDF,DOCX"
+      },
+     },
+    
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
+
+  $('#ubahDataSk').validate({
+    rules: {
+      tentang1: {
+        required: true,
+      },
+      nomor1: {
+        required: true,
+      },
+      file: {
+        extension: "pdf|docx"
+
+      },
+      'petugas1[]': {
+          required: true,
+          minlength: 1
+      },
+
+    },
+     // Specify validation Error messages
+     messages: {
+      'petugas1[]': {
         minlength:"Select you petugas, Minimum one petugas"
       },
       file: {

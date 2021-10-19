@@ -265,7 +265,7 @@ var table = $('#dataTablePermintaan').DataTable({
             url: window.location.origin+'/permintaan/buka',
             data: {id:id},
             success: function (data) {
-              console.log(data['petugas']);
+              // console.log(data['petugas']);
               $("p").empty();
               $("ol").empty();
 
@@ -297,7 +297,7 @@ var table = $('#dataTablePermintaan').DataTable({
 
               $.each(data['petugas'], function(i,e){
                 $("#petugas2 option[value='" + data['petugas'][i]['id_user'] + "']").prop("selected", true);
-                // $("#petugas1 option[value='" + data['petugas'][i]['id_user'] + "']");
+                
                 // console.log(data['petugas'][i]['id_user']);
               });
 

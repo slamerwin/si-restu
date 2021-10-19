@@ -48,6 +48,45 @@ class PermintaanSK extends BaseController
         }
     }
 
+    public function aktifSk(){
+        $level = $this->session->get( 'level' );
+		$isLoggedIn = $this->session->get( 'isLoggedIn' );
+		if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
+			return redirect()->to(base_url(''));
+		}else{
+           
+                    $user = $this->user_m->where('deleted_at is null')
+                                        ->where('statusAktif','Aktif')
+                                        ->findAll();
+                    $data = [
+                        'user'=>$user
+                    ];
+
+                    return view('permintaanSk/aktif', $data);
+           
+        }
+    }
+
+    public function tidakAktifSK(){
+        $level = $this->session->get( 'level' );
+		$isLoggedIn = $this->session->get( 'isLoggedIn' );
+		if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
+			return redirect()->to(base_url(''));
+		}else{
+            
+                    $user = $this->user_m->where('deleted_at is null')
+                                        ->where('statusAktif','Aktif')
+                                        ->findAll();
+                    $data = [
+                        'user'=>$user
+                    ];
+
+                    return view('permintaanSk/tidakAktif', $data);
+           
+        }
+    }
+
+
     public function getDataPermintaan()
 	{
         $level = $this->session->get( 'level' );
@@ -79,6 +118,67 @@ class PermintaanSK extends BaseController
 			
 		}
 	}
+
+    public function getDataAktif()
+	{
+        $level = $this->session->get( 'level' );
+		$isLoggedIn = $this->session->get( 'isLoggedIn' );
+		if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
+			return redirect()->to(base_url(''));
+		}else{
+           
+                $start = $this->request->getGet('start');
+                $length = $this->request->getGet('length');
+                $draw = $this->request->getGet('draw');
+                $search = $this->request->getGet('search');
+                $searchValue = $search['value'];
+                
+                $getData =  $this->dt_m->getDataAktif($start,$length, $searchValue);
+                $countGetData = $this->dt_m->countDataAktif($searchValue);             
+             
+    
+                return $this->setResponseFormat('json')->respond([
+                    'draw' => (int) $draw,
+                    'recordsTotal' => $countGetData[0]->id,
+                    'recordsFiltered' => $countGetData[0]->id,
+                    'data' => $getData,
+                    'level'=>  $level,
+                ]);    
+            
+			
+		}
+	}
+
+    public function getDataTidakAktif()
+	{
+        $level = $this->session->get( 'level' );
+		$isLoggedIn = $this->session->get( 'isLoggedIn' );
+		if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
+			return redirect()->to(base_url(''));
+		}else{
+           
+                $start = $this->request->getGet('start');
+                $length = $this->request->getGet('length');
+                $draw = $this->request->getGet('draw');
+                $search = $this->request->getGet('search');
+                $searchValue = $search['value'];
+                
+                $getData =  $this->dt_m->getDataTidakAktif($start,$length, $searchValue);
+                $countGetData = $this->dt_m->countDataTidakAktif($searchValue);             
+             
+    
+                return $this->setResponseFormat('json')->respond([
+                    'draw' => (int) $draw,
+                    'recordsTotal' => $countGetData[0]->id,
+                    'recordsFiltered' => $countGetData[0]->id,
+                    'data' => $getData,
+                    'level'=>  $level,
+                ]);    
+            
+			
+		}
+	}
+
 
     public function saveData(){
         $level = $this->session->get( 'level' );
@@ -134,14 +234,15 @@ class PermintaanSK extends BaseController
 		if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
 			return redirect()->to(base_url());
 		} else {
-            if($level == 1 || $level == 3 ){
+            if($level == 1 || $level == 3 || $level == 2){
                 $id=$this->request->getPost('id');
                 $data = [
+                    'status' =>'Tidak Aktif',
                     'deleted_at' => Time::now()
                 ];
                 
                 $updateSK = $this->pn_m->update($id,$data);
-                $updatePetugas = $this->pt_m->where('id_sk', $id)->set($data)->update();
+                $updatePetugas = $this->pt_m->where('id_sk', $id)->set( ['deleted_at' => Time::now()])->update();
                 $delet=$this->dt_m->deletNotif($id);
             }else{
                 return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Ilegal Access');
@@ -179,6 +280,8 @@ class PermintaanSK extends BaseController
             }
 		}
 	}
+
+    
 
     public function updateData(){
         $level = $this->session->get( 'level' );
@@ -236,7 +339,7 @@ class PermintaanSK extends BaseController
         if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
 			return redirect()->to(base_url(''));
 		}else{
-            if($level == 1 || $level == 3 || $level == 2 ){
+            
                 $id = $this->request->getPost('id');
                 if(isset($id)){
                     $sk = $this->pn_m->where('id',$id)
@@ -253,9 +356,7 @@ class PermintaanSK extends BaseController
                 }else{
                     return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Failed to get data');
                 }
-            }else{
-                return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Ilegal Access');
-            }
+            
 		}
 	}
 
@@ -309,7 +410,43 @@ class PermintaanSK extends BaseController
                         return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Failed to update  data');
                     }
                 }else{
-                    return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Failed to update  data');
+                    $file = $this->request->getFile('file');
+                    $file->move(ROOTPATH . 'public/file');
+                    $data = [
+                        'no'=>$nomor,
+                        'tentang' => $tentang,
+                        'file'=>$cekFile,
+                        'status'=> 'Aktif',
+                        'created_at' => Time::now()
+                    ];
+                    
+                    $updatePermintaan = $this->pn_m->insert($data);
+                    $sk = $this->pn_m->where('no',$nomor)
+                                     ->where('tentang',$tentang)
+                                     ->where("status = 'Aktif'")
+                                    ->where('deleted_at is null')
+                                    ->findAll();
+                    $createPermintaan = $this->no_m->insert(['status'=>"Aktif",'id_sk' => $sk[0]['id']]);
+
+
+                    foreach ($petugas as $value) {
+                        
+                        $data1=[
+                            'id_user' => $value,
+                            'id_sk' => $sk[0]['id'],
+                            'created_at' => Time::now()
+                        ];
+
+                        $updatePermintaan = $this->pt_m->insert($data1);
+                    } 
+
+                            
+        
+                    if ($updatePermintaan){
+                        return redirect()->to(base_url('permintaan/aktif'))->with('status', true)->with('message', 'Successfully update   data');
+                    }else{
+                        return redirect()->to(base_url('permintaan/aktif'))->with('status', false)->with('message', 'Failed to update  data');
+                    }
                 }
             }else{
                 return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Ilegal Access');
@@ -380,5 +517,112 @@ class PermintaanSK extends BaseController
         }
     }
 
+    public function statusNotifTidakAktif(){
+        $level = $this->session->get( 'level' );
+        $isLoggedIn = $this->session->get( 'isLoggedIn' );
+        if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
+			return redirect()->to(base_url(''));
+		}else{
+            if($level == 1 || $level == 3  ){
+                $tampung = "";
+                if($level == 1){
+                    $tampung = "superAdmin"; 
+                }else if($level == 2){
+                    $tampung = "ketua";
+                    
+                }
+             
+                $data1=[
+                    $tampung => '1'
+                ];
+
+                $update=$this->no_m->where('status', 'Tidak Aktif')->set($data1)->update();
+                return redirect()->to(base_url('permintaan/tidakAktif'));
+
+
+            }else{
+                return redirect()->to(base_url('permintaan/tidakAktif'))->with('status', false)->with('message', 'Ilegal Access');
+            }
+     
+        }
+    }
+    public function updateDataSk(){
+        $level = $this->session->get( 'level' );
+        $isLoggedIn = $this->session->get( 'isLoggedIn' );
+        if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
+			return redirect()->to(base_url(''));
+		}else{
+            if($level == 1 || $level == 2 ){
+                $tentang=$this->request->getPost('tentang1');
+                $nomor=$this->request->getPost('nomor1');
+                $status=$this->request->getPost('status');
+                $id=$this->request->getPost('id');
+                
+                $petugas=$this->request->getPost('petugas1[]');
+                $cekFile =$this->request->getFile('file1')->getName();
+                $alasan = NULL;
+                if ($status == 'Tidak Aktif'){
+                    $alasan=$this->request->getPost('alasan');
+                }
+
+                if ($cekFile == '' ||$cekFile == null ){
+                    $cekFile=$this->request->getPost('fileold');
+                }else{
+                    $file = $this->request->getFile('file1');
+                    $file->move(ROOTPATH . 'public/file');
+                }
+                
+                if(isset($id)){
+                
+                    $data = [
+                        'no' =>$nomor,
+                        'tentang' => $tentang,
+                        'file' =>$cekFile,
+                        'status' => $status,
+                        'alasan' => $alasan,
+                        'updated_at' => Time::now()
+                    ];
+                    
+                    $updatePermintaan = $this->pn_m->update($id,$data);
+                    $delet=$this->dt_m->deletPetugas($id);
+                    if ($status == 'Tidak Aktif'){
+                        $createPermintaan = $this->no_m->insert(['status'=>"Tidak Aktif",'id_sk' => $id]);
+                        $data2 = [
+                            'deleted_at' => Time::now()
+                        ];
+                        $updatePetugas = $this->pt_m->where('id_sk', $id)->set($data2)->update();
+                    }else{
+
+                        foreach ($petugas as $value) {
+                        
+                            $data1=[
+                                'id_user' => $value,
+                                'id_sk' => $id,
+                                'created_at' => Time::now()
+                            ];
+    
+                            $updatePermintaan = $this->pt_m->insert($data1);
+                        } 
+    
+                    }
+                       
+
+                  
+                            
+        
+                    if ($updatePermintaan){
+                        return redirect()->to(base_url('permintaan/aktif'))->with('status', true)->with('message', 'Successfully update   data');
+                    }else{
+                        return redirect()->to(base_url('permintaan/aktif'))->with('status', false)->with('message', 'Failed to update  data');
+                    }
+                }else{
+                    return redirect()->to(base_url('permintaan/aktif'))->with('status', false)->with('message', 'Failed to update  data');
+                }
+            }else{
+                return redirect()->to(base_url('permintaan/aktif'))->with('status', false)->with('message', 'Ilegal Access');
+            }
+     
+        }
+    }
 
 }

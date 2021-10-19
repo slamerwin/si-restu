@@ -5,6 +5,9 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 
 use App\Models\DataTable;
+use App\Models\Notif;
+use App\Models\Permintaan;
+use App\Models\Petugas;
 use App\Models\User;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\I18n\Time;
@@ -16,7 +19,10 @@ class Honor extends BaseController
     {
 		$this->session = session();
 		$this->dt_m  = new DataTable();
-		$this->user_m  = new User();
+        $this->pn_m  = new Permintaan();
+        $this->pt_m  = new Petugas();
+        $this->user_m  = new User();
+        $this->no_m  = new Notif();
 		$this->cerip = new GibberishAES();
     }
 
@@ -158,7 +164,7 @@ class Honor extends BaseController
                         'email' => $email,
                         'nip' => $nip,
                         'nohp' => $nohp,
-                        'statusAktif' => $statusAktif,
+                      
                         'updated_at' => Time::now()
                     ];
                     
@@ -191,7 +197,23 @@ class Honor extends BaseController
                 $data = [
                     'deleted_at' => Time::now()
                 ];
-                
+                $surat = $this->pn_m->where("id IN (SELECT id_sk FROM petugas WHERE id_user = ".$id."  AND deleted_at is null )")
+                                    ->where('deleted_at is null')
+                                    ->findAll();
+                foreach ($surat as $value) {
+                        // print_r($value['id']);
+                        $user = $this->user_m->where('id',$id)
+                                    ->where('deleted_at is null')
+                                    ->findAll();
+                        $data1 = [
+                            'status'=>'Tidak Aktif',
+                            'alasan' => "Petugas ".$user[0]['nip']." - ".$user[0]['username']." Telah di Hapus/Tidak Aktif lagi",
+                            'updated_at' => Time::now()
+                        ];
+                        $updateSk = $this->pn_m->update($value['id'],$data1);
+                        $updatePetugas = $this->pt_m->where('id_sk',$value['id'])->set( ['deleted_at' => Time::now()])->update();
+                        $createPermintaan = $this->no_m->insert(['status'=>"Tidak Aktif",'id_sk' => $value['id']]);  
+                }
                 $updateUser = $this->user_m->update($id,$data);
             }else{
                 return redirect()->to(base_url('honor'))->with('status', false)->with('message', 'Ilegal Access');

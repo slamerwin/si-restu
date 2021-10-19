@@ -187,7 +187,7 @@
                     
                 }
             });
-        },20000);
+        },10000);
        
     </script>
     <?= $this->renderSection('script') ?>
