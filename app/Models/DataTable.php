@@ -113,6 +113,7 @@ class DataTable{
 
 
     public function countNotif($search,$level){
+        
         $builder = $this->db->table('notif');
         $builder->select('count(id) as count');
         if($level == 1){

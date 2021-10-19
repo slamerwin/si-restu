@@ -324,22 +324,29 @@ class PermintaanSK extends BaseController
         if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
 			return redirect()->to(base_url(''));
 		}else{
-            if($level == 1 || $level == 2 || $level == 3 ){
+            
                 $countPermintaan=$this->dt_m->countNotif('Permohonan',$level);
                 $countAktif=$this->dt_m->countNotif('Aktif',$level);
                 $countTidakAktif=$this->dt_m->countNotif('Tidak Aktif',$level);
+                if($level !=4){
+                    $data=[
+                        'permintaan'=>  $countPermintaan[0]->count,
+                        'aktif'=>  $countAktif[0]->count,
+                        'tidak'=>  $countTidakAktif[0]->count,
+                    ];
+                }else{
+                    $data=[
+                        'permintaan'=>  0,
+                        'aktif'=>  0,
+                        'tidak'=> 0,
+                    ];
+                }
+               
 
-                $data=[
-                    'permintaan'=>  $countPermintaan[0]->count,
-                    'aktif'=>  $countAktif[0]->count,
-                    'tidak'=>  $countTidakAktif[0]->count,
-                ];
+               
                 return $this->setResponseFormat('json')->respond($data);
              
-            }else{
-                return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Ilegal Access');
-            }
-     
+           
         }
     }
 

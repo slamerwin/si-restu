@@ -162,6 +162,7 @@
         }
     </script>
     <script>
+        
         var url = "";
 
         setInterval(function(){
@@ -186,7 +187,8 @@
                     
                 }
             });
-        },2000);
+        },20000);
+       
     </script>
     <?= $this->renderSection('script') ?>
 </body>
