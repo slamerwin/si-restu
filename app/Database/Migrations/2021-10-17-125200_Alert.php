@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Suratkeputusan extends Migration
+class Alert extends Migration
 {
 	public function up()
 	{
@@ -14,29 +14,29 @@ class Suratkeputusan extends Migration
 					'constraint'     => 11,
 					'auto_increment' => true,
 			],
-			'no'       => [
-					'type'           => 'VARCHAR',
-					'constraint'     => 250,
-					'null'           => true,
-			],
-			'tentang'       => [
-					'type'           => 'VARCHAR',
-					'constraint'     => 250,
-					'null'           => true,
-			],
-			'file'       => [
-				'type'           => 'VARCHAR',
-				'constraint'     => 250,
-				'null'           => true,
-			],
 			'status'       => [
-				'type'           => 'VARCHAR',
-				'constraint'     => 250,
+					'type'           => 'VARCHAR',
+					'constraint'     => 250,
+					'null'           => true,
+			],
+			'id_sk'       => [
+				'type'           => 'INT',
+				'constraint'     => 11,
 				'null'           => true,
 			],
-			'alasan'       => [
-				'type'           => 'VARCHAR',
-				'constraint'     => 250,
+			'ketua'       => [
+				'type'           => 'INT',
+				'constraint'     => 11,
+				'null'           => true,
+			],
+			'admin'       => [
+				'type'           => 'INT',
+				'constraint'     => 11,
+				'null'           => true,
+			],
+			'superAdmin'       => [
+				'type'           => 'INT',
+				'constraint'     => 11,
 				'null'           => true,
 			],
 		
@@ -54,12 +54,11 @@ class Suratkeputusan extends Migration
 			
 		]);
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('suratkeputusan');
+		$this->forge->createTable('notif');
 	}
-
 
 	public function down()
 	{
-		$this->forge->dropTable('suratkeputusan');
+		$this->forge->dropTable('notif');
 	}
 }

@@ -161,6 +161,33 @@
             }
         }
     </script>
+    <script>
+        var url = "";
+
+        setInterval(function(){
+            $.ajax({
+                url:"<?= base_url('permintaan/notif')?>",
+                type: "POST",
+                dataType:"json",
+                data:{},
+                success:function($data){
+                    if('<?= session()->get('level')?>' == 1){
+                        $('#total').html(parseInt($data['permintaan'])+parseInt($data['tidak']));
+                        // console.log(parseInt($data['permintaan']));
+                    }
+                    if('<?= session()->get('level')?>' == 2){
+                        $('#total').html(parseInt($data['permintaan']));
+                        // console.log(parseInt($data['permintaan']));
+                    }
+                    if('<?= session()->get('level')?>' == 3){
+                        $('#total').html(parseInt($data['tidak']));
+                        // console.log(parseInt($data['permintaan']));
+                    }
+                    
+                }
+            });
+        },2000);
+    </script>
     <?= $this->renderSection('script') ?>
 </body>
 

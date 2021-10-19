@@ -80,7 +80,15 @@ $('#log').validate({
       nip: { 
         required: true,
       },
+      photo: {
+        extension: "JPG|PNG|jpg"
+      },
     },
+    messages: {
+      photo: {
+        extension:"Format img JPG,PNG"
+      },
+     },
 
     errorElement: 'span',
     errorPlacement: function (error, element) {
@@ -240,14 +248,14 @@ $('#log').validate({
       },
       'petugas1[]': {
           required: true,
-          minlength: 2
+          minlength: 1
       },
 
     },
      // Specify validation Error messages
      messages: {
       'petugas1[]': {
-        minlength:"Select you petugas, Minimum two petugas"
+        minlength:"Select you petugas, Minimum one petugas"
       },
      },
     
@@ -271,14 +279,56 @@ $('#log').validate({
       },
       'petugas[]': {
           required: true,
-          minlength: 2
+          minlength: 1
       },
 
     },
      // Specify validation Error messages
      messages: {
       'petugas[]': {
-        minlength:"Select you petugas, Minimum two petugas"
+        minlength:"Select you petugas, Minimum one petugas"
+      },
+     },
+    
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass('is-invalid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass('is-invalid');
+    }
+  });
+
+  $('#buatDataPermintaan').validate({
+    rules: {
+      tentang2: {
+        required: true,
+      },
+      nomor: {
+        required: true,
+      },
+      file: {
+        required: true,
+        extension: "pdf|docx"
+
+      },
+      'petugas2[]': {
+          required: true,
+          minlength: 1
+      },
+
+    },
+     // Specify validation Error messages
+     messages: {
+      'petugas[]': {
+        minlength:"Select you petugas, Minimum one petugas"
+      },
+      file: {
+        extension:"Format File PDF,DOCX"
       },
      },
     

@@ -77,7 +77,9 @@ class DataTable{
         }
         $builder->where("status = 'Permohonan'");
         $builder->where('deleted_at is null');
+        $builder->orderBy('created_at', 'DESC');
         $builder->from( '(SELECT @rownum := '.$star.') as r');
+
         $query = $builder->get($lengt,$star);
         return $query->getResult();
 
@@ -91,6 +93,7 @@ class DataTable{
         $builder->selectCount('id');
         $builder->where("status = 'Permohonan'");
         $builder->where('deleted_at is null');
+        $builder->orderBy('created_at', 'DESC');
         $query = $builder-> get();
         return $query->getResult();
 
@@ -99,6 +102,30 @@ class DataTable{
     public function deletPetugas($idsk){
         $builder = $this->db->table('petugas');
         $builder->delete(['id_sk' => $idsk]);
+
+    }
+
+    public function deletNotif($idsk){
+        $builder = $this->db->table('notif');
+        $builder->delete(['id_sk' => $idsk]);
+
+    }
+
+
+    public function countNotif($search,$level){
+        $builder = $this->db->table('notif');
+        $builder->select('count(id) as count');
+        if($level == 1){
+            $builder->where("superAdmin != 1");
+        }else if ($level == 2){
+            $builder->where("admin != 1");
+        }else if ($level == 3){
+            $builder->where("ketua != 1");
+        }
+        $builder->where("status = '".$search."'");
+        $builder->where('deleted_at is null');
+        $query = $builder-> get();
+        return $query->getResult();
 
     }
 }

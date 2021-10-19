@@ -10,5 +10,9 @@ $routes->group('permintaan', function($routes)
     $routes->post('edit', 'PermintaanSK::edit');
     $routes->post('updateData', 'PermintaanSK::updateData');
     $routes->post('buka', 'PermintaanSK::buka');
-
+    $routes->post('buatSK', 'PermintaanSK::buatSK');
+    $routes->post('notif', 'PermintaanSK::totalNotif');
+    $routes->get('statusNotifPembuatan', 'PermintaanSK::statusNotifPembuatan');
+    
+    
 });

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
 use App\Controllers\BaseController;
 use App\Models\DataTable;
+use App\Models\Notif;
 use App\Models\Permintaan;
 use App\Models\Petugas;
 use App\Models\User;
@@ -23,6 +24,7 @@ class PermintaanSK extends BaseController
         $this->pn_m  = new Permintaan();
         $this->pt_m  = new Petugas();
         $this->user_m  = new User();
+        $this->no_m  = new Notif();
     }
 
     public function index(){
@@ -99,7 +101,8 @@ class PermintaanSK extends BaseController
 
                     $getPermintaan = $this->pn_m->where('tentang', $tentang)
                                                 ->where('deleted_at is null')
-                                                ->findAll();       
+                                                ->findAll(); 
+                    $createPermintaan = $this->no_m->insert(['status'=>"Permohonan",'id_sk' => $getPermintaan[0]['id']]);      
 
                     foreach ($petugas as $value) {
                         
@@ -139,6 +142,7 @@ class PermintaanSK extends BaseController
                 
                 $updateSK = $this->pn_m->update($id,$data);
                 $updatePetugas = $this->pt_m->where('id_sk', $id)->set($data)->update();
+                $delet=$this->dt_m->deletNotif($id);
             }else{
                 return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Ilegal Access');
             }
@@ -254,4 +258,120 @@ class PermintaanSK extends BaseController
             }
 		}
 	}
+
+    public function buatSK(){
+        $level = $this->session->get( 'level' );
+        $isLoggedIn = $this->session->get( 'isLoggedIn' );
+        if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
+			return redirect()->to(base_url(''));
+		}else{
+            if($level == 1 || $level == 2 ){
+                $tentang=$this->request->getPost('tentang2');
+                $nomor=$this->request->getPost('nomor');
+                $id=$this->request->getPost('id');
+                $petugas=$this->request->getPost('petugas2[]');
+                $cekFile =$this->request->getFile('file')->getName();
+         
+                
+                if(isset($id)){
+                    $file = $this->request->getFile('file');
+                    $file->move(ROOTPATH . 'public/file');
+                    $data = [
+                        'no'=>$nomor,
+                        'tentang' => $tentang,
+                        'file'=>$cekFile,
+                        'status'=> 'Aktif',
+                        'updated_at' => Time::now()
+                    ];
+                    
+                    $updatePermintaan = $this->pn_m->update($id,$data);
+                    $delet=$this->dt_m->deletPetugas($id);
+                    $delet=$this->dt_m->deletNotif($id);
+                    $createPermintaan = $this->no_m->insert(['status'=>"Aktif",'id_sk' => $id]);
+
+
+                    foreach ($petugas as $value) {
+                        
+                        $data1=[
+                            'id_user' => $value,
+                            'id_sk' => $id,
+                            'created_at' => Time::now()
+                        ];
+
+                        $updatePermintaan = $this->pt_m->insert($data1);
+                    } 
+
+                            
+        
+                    if ($updatePermintaan){
+                        return redirect()->to(base_url('permintaan'))->with('status', true)->with('message', 'Successfully update   data');
+                    }else{
+                        return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Failed to update  data');
+                    }
+                }else{
+                    return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Failed to update  data');
+                }
+            }else{
+                return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Ilegal Access');
+            }
+     
+        }
+    }
+
+    public function totalNotif(){
+        $level = $this->session->get( 'level' );
+        $isLoggedIn = $this->session->get( 'isLoggedIn' );
+        if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
+			return redirect()->to(base_url(''));
+		}else{
+            if($level == 1 || $level == 2 || $level == 3 ){
+                $countPermintaan=$this->dt_m->countNotif('Permohonan',$level);
+                $countAktif=$this->dt_m->countNotif('Aktif',$level);
+                $countTidakAktif=$this->dt_m->countNotif('Tidak Aktif',$level);
+
+                $data=[
+                    'permintaan'=>  $countPermintaan[0]->count,
+                    'aktif'=>  $countAktif[0]->count,
+                    'tidak'=>  $countTidakAktif[0]->count,
+                ];
+                return $this->setResponseFormat('json')->respond($data);
+             
+            }else{
+                return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Ilegal Access');
+            }
+     
+        }
+    }
+
+    public function statusNotifPembuatan(){
+        $level = $this->session->get( 'level' );
+        $isLoggedIn = $this->session->get( 'isLoggedIn' );
+        if (! isset ( $isLoggedIn ) || $isLoggedIn != TRUE ) {
+			return redirect()->to(base_url(''));
+		}else{
+            if($level == 1 || $level == 2  ){
+                $tampung = "";
+                if($level == 1){
+                    $tampung = "superAdmin"; 
+                }else if($level == 2){
+                    $tampung = "admin";
+                    
+                }
+             
+                $data1=[
+                    $tampung => '1'
+                ];
+
+                $update=$this->no_m->where('status', 'Permohonan')->set($data1)->update();
+                return redirect()->to(base_url('permintaan'));
+
+
+            }else{
+                return redirect()->to(base_url('permintaan'))->with('status', false)->with('message', 'Ilegal Access');
+            }
+     
+        }
+    }
+
+
 }
