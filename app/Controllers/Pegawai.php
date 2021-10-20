@@ -239,9 +239,15 @@ class Pegawai extends BaseController
                             'alasan' => "Petugas ".$user[0]['nip']." - ".$user[0]['username']." Telah di Hapus/Tidak Aktif lagi",
                             'updated_at' => Time::now()
                         ];
-                        $updateSk = $this->pn_m->update($value['id'],$data1);
-                        $updatePetugas = $this->pt_m->where('id_sk',$value['id'])->set( ['deleted_at' => Time::now()])->update();
-                        $createPermintaan = $this->no_m->insert(['status'=>"Tidak Aktif",'id_sk' => $value['id']]);  
+                        if($value['no'] == '' || $value['no'] == null ){
+                            $updateSK = $this->pn_m->update($value['id'],['status' =>'Tidak Aktif','deleted_at' => Time::now()]);
+                            $updatePetugas = $this->pt_m->where('id_sk', $value['id'])->set( ['deleted_at' => Time::now()])->update();
+                            $delet=$this->dt_m->deletNotif($value['id']);
+                        }else{
+                            $updateSk = $this->pn_m->update($value['id'],$data1);
+                            $updatePetugas = $this->pt_m->where('id_sk',$value['id'])->set( ['deleted_at' => Time::now()])->update();
+                            $createPermintaan = $this->no_m->insert(['status'=>"Tidak Aktif",'id_sk' => $value['id']]); 
+                        } 
                 }
                 $updateUser = $this->user_m->update($id,$data);
                
