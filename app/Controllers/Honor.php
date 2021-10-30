@@ -159,14 +159,51 @@ class Honor extends BaseController
                 
                 if(isset($email)){
                 
-                    $data = [
-                        'username' => $username,
-                        'email' => $email,
-                        'nip' => $nip,
-                        'nohp' => $nohp,
-                      
-                        'updated_at' => Time::now()
-                    ];
+                    if($statusAktif == 'Aktif'){
+                        $data = [
+                            'username' => $username,
+                            'email' => $email,
+                            'nip' => $nip,
+                            'nohp' => $nohp,
+                            'statusAktif'=> $statusAktif,
+                            'updated_at' => Time::now()
+                        ];
+                    }else{
+                            $data = [
+                                'username' => $username,
+                                'email' => $email,
+                                'nip' => $nip,
+                                'nohp' => $nohp,
+                                'statusAktif'=> $statusAktif,
+                                'updated_at' => Time::now()
+                            ];
+                            $surat = $this->pn_m->where("id IN (SELECT id_sk FROM petugas WHERE id_user = ".$id."  AND deleted_at is null )")
+                            ->where('deleted_at is null')
+                            ->findAll();
+
+                            foreach ($surat as $value) {
+                                // print_r($value['id']);
+                                        $user = $this->user_m->where('id',$id)
+                                                    ->where('deleted_at is null')
+                                                    ->findAll();
+                                        $data1 = [
+                                            'status'=>'Tidak Aktif',
+                                            'alasan' => "Petugas ".$user[0]['nip']." - ".$user[0]['username']." Telah di Hapus/Tidak Aktif lagi",
+                                            'updated_at' => Time::now()
+                                        ];
+                                        if($value['no'] == '' || $value['no'] == null ){
+                                            $updateSK = $this->pn_m->update($value['id'],['status' =>'Tidak Aktif','deleted_at' => Time::now()]);
+                                            $updatePetugas = $this->pt_m->where('id_sk', $value['id'])->set( ['deleted_at' => Time::now()])->update();
+                                            $delet=$this->dt_m->deletNotif($value['id']);
+                                        }else{
+                                            $updateSk = $this->pn_m->update($value['id'],$data1);
+                                            $updatePetugas = $this->pt_m->where('id_sk',$value['id'])->set( ['deleted_at' => Time::now()])->update();
+                                            $createPermintaan = $this->no_m->insert(['status'=>"Tidak Aktif",'id_sk' => $value['id']]); 
+                                        } 
+                                }
+
+                    }
+                  
                     
                     $updateUser = $this->user_m->update($id,$data);
             

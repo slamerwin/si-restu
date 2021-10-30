@@ -97,6 +97,12 @@
                     <div class="form-group">
                         <input type="number" class="form-control form-control-user" id="nohp1" name="nohp1" placeholder="No HP" value="<?= old('nohp') ?>">
                     </div>
+                    <div class="form-group">
+                        <select id="statusAktif" name="statusAktif" class="form-control form-control-user" value="<?= old('statusAktif') ?>">
+                            <option value="Aktif" >Aktif</option>
+                            <option value="Tidak Aktif">Tidak Aktif</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
