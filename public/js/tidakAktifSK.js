@@ -24,7 +24,7 @@ var table = $('#dataTableTidakAktif').DataTable({
             "data": "id",
             "render": function (data, type, full, meta) {
                 var actions = [];         
-                actions.push('<a href="'+window.location.origin+'/file/'+full.file+'" class="btn btn-xs btn-warning"  title="Download" data-content="download"><i class="fa fa-download"></i></a>');
+                actions.push('<a href="'+window.location.origin+'/file/'+full.file+'" class="btn btn-xs btn-warning" target="_blank"  title="Download" data-content="download"><i class="fa fa-download"></i></a>');
                 return actions.join('&nbsp;');
             }
         },

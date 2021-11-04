@@ -23,7 +23,7 @@ var table = $('#dataTableAktif').DataTable({
                 var actions = []; 
                 actions.push('<a onclick="up(' + data + ')" class="btn btn-xs btn-success" data-toggle="modal" data-target="#exampleModal1" title="Edit" data-content="Ubah"><i class="fas fa-pencil-alt"></i></a>');
                 actions.push('<a onclick="del(' + data + ')" class="btn btn-xs btn-danger" data-toggle="popover" data-trigger="hover" title="Hapus" data-content="hapus"><i class="fas fa-trash-alt"></i><a>');
-                actions.push('<a href="'+window.location.origin+'/file/'+full.file+'" class="btn btn-xs btn-warning"  title="Download" data-content="download"><i class="fa fa-download"></i></a>');
+                actions.push('<a href="'+window.location.origin+'/file/'+full.file+'" class="btn btn-xs btn-warning"  target="_blank" title="Download" data-content="download"><i class="fa fa-download"></i></a>');
                 actions.push('<a onclick="buka(' + data + ')" class="btn btn-xs btn-success" data-toggle="modal" data-target="#exampleModal2" title="Rekomendasi Pembuatan SK" data-content="Ubah"><i class="fas fa-file-invoice"></i></a>');
                 return actions.join('&nbsp;');
             }
@@ -76,7 +76,7 @@ var table = $('#dataTableAktif').DataTable({
                 "data": "id",
                 "render": function (data, type, full, meta) {
                     var actions = []; 
-                    actions.push('<a href="'+window.location.origin+'/file/'+full.file+'" class="btn btn-xs btn-warning"  title="Download" data-content="download"><i class="fa fa-download"></i></a>');
+                    actions.push('<a href="'+window.location.origin+'/file/'+full.file+'" class="btn btn-xs btn-warning" target="_blank"  title="Download" data-content="download"><i class="fa fa-download"></i></a>');
                     actions.push('<a onclick="buka(' + data + ')" class="btn btn-xs btn-success" data-toggle="modal" data-target="#exampleModal2" title="Rekomendasi Pembuatan SK" data-content="Ubah"><i class="fas fa-file-invoice"></i></a>');
                     return actions.join('&nbsp;');
                 }
