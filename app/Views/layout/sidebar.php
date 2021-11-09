@@ -8,8 +8,10 @@
                     <div class="sidebar-brand-text mx-3">SI RESTU</div>
                 </div>
                 
+               
+                
             </a>
-
+            <div class="sidebar-brand-text mx-3" style="font-size: 10px; color: white; text-align: center; ">Digitalisasi Regulasi Surat Keputusan Ketua</div>
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
             <?php if(session()->get( 'level' ) == 1|| session()->get( 'level' ) == 2 || session()->get( 'level' ) == 3) {?>
